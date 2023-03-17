@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>订单详情表格</title>
+    <link rel="stylesheet" type="text/css" href="/css/order.css">
+</head>
+<body>
+<div class="header" style="top: 50px">
+    <h1>订单详情</h1>
+</div>
+<table>
+    <thead>
+    <tr>
+        <th>产品名称</th>
+        <th>购买数量</th>
+        <th>产品总价格</th>
+        <th>签收状态</th>
+        <th>支付时间</th>
+        <th>操作</th>
+    </tr>
+    </thead>
+    <tbody id="myBody">
+    <!--<tr>
+        <td>商品A</td>
+        <td>2</td>
+        <td>¥200.00</td>
+        <td>已签收</td>
+        <td>2023-03-16 14:32:01</td>
+        <td><button class="btn-sign">确认签收</button></td>
+    </tr>
+    <tr>
+        <td>商品B</td>
+        <td>1</td>
+        <td>¥50.00</td>
+        <td>未签收</td>
+        <td>2023-03-15 11:12:53</td>
+        <td><button class="btn-sign">确认签收</button></td>
+    </tr>
+    <tr>
+        <td>商品C</td>
+        <td>3</td>
+        <td>¥300.00</td>
+        <td>已签收</td>
+        <td>2023-03-12 09:23:47</td>
+        <td><button class="btn-sign">确认签收</button></td>
+    </tr>-->
+    </tbody>
+</table>
+<script src="/js/jQuery.3.64.js"></script>
+<script>
+    //页面加载完毕执行回调函数
+    $(function () {
+        //获取用户id
+        let userid = localStorage.getItem("userid");
+        //发送ajax请求
+        $.ajax({
+            url:"/orders/message",
+            method:"POST",
+            data:{"userid":userid},
+            success:function (json) {
+                if (json.code==200){
+                    //拼接html页面
+                    let html="";
+                    json.data.forEach(target=>{
+                        //订单状态
+                        let status=target.productStatus==0?"未签收":"已签收"
+                        html+="<tr>\n" +
+                            "        <td>"+target.productName+"</td>\n" +
+                            "        <td>"+target.productNumber+"</td>\n" +
+                            "        <td>¥"+target.balance+"元</td>\n" +
+                            "        <td>"+status+"</td>\n" +
+                            "        <td>"+target.payTime+"</td>\n" +
+                            "        <td><button class=\"btn-sign\" onclick=\"sure("+target.id+")\">确认签收</button>" +
+                            "        <button class=\"btn-del\" onclick=\"deleteBy("+target.id+")\">删除</button></td>\n" +
+                            "    </tr>"
+                    })
+                    //清空按钮
+                    html+="<tr>\n" +
+                        "        <td colspan=\"5\" class='name'>宝剑锋从磨砺出，梅花香自苦寒来</td>\n" +
+                        "        <td><button class=\"btn-sign\" onclick=\"deleteAll()\">清空记录</button></td>\n" +
+                        "    </tr>"
+                    //执行html代码
+                    $("#myBody").html(html)
+                }else {
+                    alert(json.message)
+                }
+            }
+        })
+    })
+    /**
+     * 确定签收
+     */
+    function sure(id) {
+        $.ajax({
+            url: "/orders/sure",
+            method: "GET",
+            data: {"id":id},
+            success:function (json) {
+                if (json.code==200){
+                    alert(json.message)
+                    location.reload()
+                }else {
+                    alert(json.message)
+                }
+            }
+        })
+    }
+    /**
+     * 删除
+     */
+    function deleteBy(id) {
+        $.ajax({
+            url: "/orders/delete",
+            method: "DELETE",
+            data: {"id":id},
+            success:function (json) {
+                if (json.code==200){
+                    alert(json.message)
+                    location.reload()
+                }else {
+                    alert(json.message)
+                }
+            }
+        })
+    }
+    /**
+     * 清空
+     */
+    function deleteAll() {
+        $.ajax({
+            url: "/orders/deleteAll",
+            method: "DELETE",
+            success:function (json) {
+                if (json.code==200){
+                    alert(json.message)
+                    location.reload()
+                }else {
+                    alert(json.message)
+                }
+            }
+        })
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>商品浏览界面</title>
+    <link rel="stylesheet" href="/css/index.css">
+</head>
+<body>
+<div class="header" style="top: 50px">
+    <h1>欢迎用户<span id="name" class="name"></span>来到大橙子商品世界</h1>
+</div>
+<div class="container" style="margin-top: 200px">
+    <h2>
+        <span style="position: absolute;left: 20px">
+       余额：<span id="money"></span>元
+    </span>商品列表
+        <button class="btn-cart" onclick="shoppingCar()">查看购物车</button>
+        <button class="btn-amount" onclick="amount()">充值</button>
+        <button class="btn-order" onclick="order()">查看订单</button>
+    </h2>
+    <table>
+        <tr>
+            <th>商品名称</th>
+            <th>单价</th>
+            <th>剩余数量</th>
+            <th>操作</th>
+            <th>购物车数量</th>
+        </tr>
+        <tbody id="tableBody">
+        <!--<tr class="product">
+            <td>华为 MateBook X Pro</td>
+            <td>9999元</td>
+            <td>50台</td>
+            <td>
+                <button class="view-btn" value=1>查看详情</button>
+                <button class="buy-btn" value=2>添加至购物车</button>
+            </td>
+            <td>0</td>
+        </tr>-->
+        </tbody>
+    </table>
+</div>
+<!--引入jQuery库-->
+<script src="/js/jQuery.3.64.js"></script>
+<script>
+    //获取用户余额和名字
+    let data = JSON.parse(localStorage.getItem('data'));
+    //页面打开完毕执行回调函数
+    $(function () {
+        $("#name").text(data.username)
+        //发送AJAX请求,查询产品
+        $.ajax({
+            method: "GET",
+            data: {"username": data.username},
+            url: "/product/index",
+            success: function (json) {
+                console.log(json)
+                let html = "";
+                // 显示余额
+                $("#money").text(json.message)
+                //显示商品页面
+                json.data.forEach(target => {
+                    html += "<tr class=\"product\">";
+                    html += "<td>" + target.name + "</td>";
+                    html += "<td>" + target.price + "元</td><td>" + target.stock + "台</td>";
+                    html += "<td>";
+                    html += "<button class=\"view-btn\" onclick=\"message(" + target.id + ")\">查看详情</button>";
+                    html += "<button class=\"buy-btn\" onclick=\"getShopping(" + target.id + ")\">添加至购物车</button>";
+                    html += "<button class=\"buy-btn\" onclick=\"pullShopping(" + target.id + ")\">从购物车移除</button>";
+                    html += "</td><td id=" + target.id + ">0台</td></tr>";
+                })
+                console.log(html)
+                $("#tableBody").html(html);
+                //发送第二个AJAX请求，查询用户是否有订单
+                $.ajax({
+                    url: "/order/number",
+                    method: "GET",
+                    data: {"userid": data.id},
+                    success: function (json02) {
+                        if (json02.code == 200) {
+                            //回显函数值
+                            console.log(json02)
+                            json02.data.forEach(number => {
+                                $("#" + number.productId + "").text(number.productNumber+"台")
+                            })
+                        }
+                    }
+                })
+            }
+        })
+    })
+
+    /**
+     * 点击查看详情按钮执行回调函数
+     */
+    function message(id) {
+        //发送AJAX请求
+        $.ajax({
+            method: "GET",
+            url: "/product/message",
+            data: {"id": id},
+            success: function (json) {
+                console.log(json)
+                //后端传来单个商品的详细信息传入另一个html
+                localStorage.setItem('productData', JSON.stringify(json));
+                window.location.href = "/web/message.html";
+            }
+        })
+    }
+
+    /**
+     * 点击添加至购物车按钮执行回调函数
+     */
+    function getShopping(id) {
+        $.ajax({
+            url: "/order/add",
+            data: {"id": id, "username": data.username},
+            method: "PUT",
+            success: function (json) {
+                if (json.code == 200) {
+                    $("#" + id + "").text(json.data.productNumber+"台")
+                } else {
+                    alert(json.message)
+                }
+            }
+        })
+    }
+
+    /**
+     * 点击从购物车移除按钮执行回调函数
+     */
+    function pullShopping(id) {
+        $.ajax({
+            url: "/order/pull",
+            //产品id
+            data: {"id": id},
+            method: "PUT",
+            success: function (json) {
+                if (json.code == 200) {
+                    $("#" + id + "").text(json.data.productNumber+"台")
+                } else {
+                    alert(json.message)
+                }
+            }
+        })
+    }
+
+    /**
+     * 查看购物车
+     */
+    function shoppingCar() {
+        //给购物车页面传递数据
+        localStorage.setItem("userid", data.id)
+        window.location.href = "/web/shoppingcart.html";
+    }
+
+    /**
+     * 充值
+     */
+    function amount() {
+        //传用户id
+        localStorage.setItem('id', JSON.stringify(data.id));
+        window.location.href = "/web/amount.html"
+    }
+
+    /**
+     * 查看已购订单
+     */
+
+    function order(){
+        localStorage.setItem("userid",data.id)
+        window.location.href="/web/order.html"
+    }
+</script>
+</body>
+</html>

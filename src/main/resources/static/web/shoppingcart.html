@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>购物车</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    h1 {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    table {
+      border-collapse: collapse;
+      margin: 20px auto;
+    }
+
+    th, td {
+      border: 1px solid #ddd;
+      padding: 10px;
+      text-align: center;
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
+
+    .product-name {
+      text-align: left;
+    }
+
+    .remove-btn {
+      background-color: #f44336;
+      color: white;
+      border: none;
+      padding: 10px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .remove-btn:hover {
+      background-color: #da190b;
+    }
+
+    .pay-btn {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 10px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .pay-btn:hover {
+      background-color: #3e8e41;
+    }
+
+    .total {
+      text-align: right;
+      font-weight: bold;
+    }
+
+    .total-label {
+      text-align: right;
+      padding-right: 10px;
+      font-weight: bold;
+    }
+
+    .checkout {
+      text-align: center;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+<h1>购物车</h1>
+<table>
+  <thead>
+  <tr>
+    <th>商品名称</th>
+    <th>产品单价</th>
+    <th>数量</th>
+    <th>订单状态</th>
+    <th>操作</th>
+  </tr>
+  </thead>
+  <tbody id="tbody">
+  <!--<tr>
+    <td class="product-name">Product 1</td>
+    <td>$10.00</td>
+    <td>2</td>
+    <td>未付款</td>
+    <td><button class="remove-btn">移除</button></td>
+  </tr>
+  <tr>
+    <td class="product-name">Product 2</td>
+    <td>$15.00</td>
+    <td>1</td>
+    <td>已付款</td>
+    <td><button class="remove-btn">移除</button></td>
+  </tr>
+  <tr>
+    <td class="product-name">Product 3</td>
+    <td>$20.00</td>
+    <td>3</td>
+    <td>未付款</td>
+    <td><button class="remove-btn">移除</button></td>
+  </tr>-->
+  </tbody>
+</table>
+<div class="checkout">
+  <button class="pay-btn" onclick="payFor()">全部支付</button>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <button class="pay-btn" onclick="backTo()">返回</button>
+</div>
+</body>
+<script src="/js/jQuery.3.64.js"></script>
+<script>
+  //获取json数据
+  let userid=localStorage.getItem("userid");
+  //定义总价格
+  let allBalance=0;
+    $.ajax({
+      url:"/order/number",
+      method:"GET",
+      data:{"userid":userid},
+      success:function (json){
+        if (json.code==200){
+          let html='';
+          //前端数据拼接
+          json.data.forEach(order=>{
+            let stats=order.productStatus==1?"已支付":"未支付"
+            html+="<tr>";
+            html+="<td class=\"product-name\">"+order.productName+"</td>";
+            html+="<td>￥"+order.productBalance+"元</td>";
+            html+="<td>"+order.productNumber+"</td>";
+            html+="<td>"+stats+"</td>";
+            html+="<td><button class=\"remove-btn\" onclick=\"removeById("+order.productId+")\">移除</button></td>";
+            html+="</tr>";
+            //计算总价
+            allBalance+=(order.productBalance*order.productNumber)
+          })
+          html+="<tr>\n" +
+                  "    <td class=\"total-label\" colspan=\"4\">总计:</td>\n" +
+                  "    <td class=\"total\">￥"+allBalance+"元</td>\n" +
+                  "  </tr>";
+          $("#tbody").html(html);
+        }else {
+          alert(json.message)
+        }
+      }
+    })
+  /**
+   * 移除按钮触发删除订单事件
+   */
+  function removeById(productId) {
+
+    $.ajax({
+      url:"/order/remove",
+      method:"DELETE",
+      data:{"productId":productId},
+      success:function (json) {
+        //接受状态码
+        if (json.code==200){
+          alert("移除成功！")
+          location.reload()
+        }else {
+          alert(json.message)
+        }
+      }
+    })
+  }
+
+  /**
+   * 执行支付
+   */
+  function payFor() {
+    $.ajax({
+      url:"/user/payFor",
+      method:"POST",
+      data:{"balance":allBalance,"userid":userid},
+      success:function (json) {
+        alert(json.message)
+        //重新加载页面
+        location.reload();
+      }
+    })
+  }
+
+  /**
+   * 返回
+   */
+  function backTo() {
+    window.location.href="/web/index.html";
+  }
+</script>
+</html>

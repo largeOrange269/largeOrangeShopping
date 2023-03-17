@@ -1,0 +1,90 @@
+/* 设置字体和背景 */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #FFA500;
+}
+/* 设置全局样式 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+/*设置标题*/
+.header {
+    position: absolute;
+    margin-top: 0;
+    left: 42%;
+    font-size: 25px;
+    color: #da190b;
+}
+/* 设置表格 */
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-top: 130px;
+    margin-left: 0;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    text-align: center;
+}
+
+/* 设置表头 */
+thead {
+    background-color: #f2f2f2;
+}
+
+/* 设置表头单元格 */
+th {
+    font-weight: bold;
+    padding: 10px;
+    border: 1px solid #ccc;
+}
+
+/* 设置表格单元格 */
+td {
+    padding: 10px;
+    border: 1px solid #ccc;
+}
+
+/* 设置确认签收按钮 */
+.btn-sign {
+    background-color: #008CBA;
+    color: #fff;
+    border: none;
+    margin-left: 20px;
+    padding: 5px 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+/* 设置鼠标悬停在确认签收按钮上的样式 */
+.btn-sign:hover {
+    background-color: #00688B;
+}
+/* 设置删除按钮 */
+.btn-del {
+    background-color: #008CBA;
+    color: #fff;
+    border: none;
+    margin-left: 30px;
+    padding: 5px 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+/* 设置鼠标悬停在确认签收按钮上的样式 */
+.btn-del:hover {
+    background-color: #00688B;
+}
+/*文本样式*/
+.name{
+    color: blue;
+    background-color: #888888;
+    font-size: 40px;
+}

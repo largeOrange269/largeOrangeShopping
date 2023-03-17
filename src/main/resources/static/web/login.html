@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>购物登录页面</title>
+    <link rel="stylesheet" type="text/css" href="/css/login.css">
+</head>
+<body>
+<script src="/js/jQuery.3.64.js"></script>
+<script>
+</script>
+<div class="container">
+    <h2 class="h2-class">欢迎使用大橙子购物:</h2>
+    <div class="login-form">
+        <h2>请登录</h2>
+        <label for="username">用户名</label>
+        <input type="text" id="username" name="username" required>
+        <label for="password">密码</label>
+        <input type="password" id="password" name="password" required>
+        <input type="submit" value="登录" id="sub">
+    </div>
+    <img src="/image/img.jpg" class="bg-img">
+</div>
+<!--引入jQuery-->
+<script src="/js/jQuery.3.64.js"></script>
+<script>
+    $("#sub").click(function () {
+        let username = $("#username").val()
+        let password = $("#password").val()
+        console.log(username + password)
+        /*点击按钮发送ajax请求*/
+        $.ajax({
+            url: "/user/login",
+            method: "POST",
+            data: {"username": username, "password": password},
+            success: function (json) {
+                console.log(json)
+                if (json.code == 200) {
+                    alert("登录成功！")
+                    //将用户余额传给index.html
+                    localStorage.setItem('data', JSON.stringify(json.data));
+                    window.location.href = "/web/index.html"
+                } else {
+                    alert(json.message)
+                }
+            }
+        })
+    })
+</script>
+</body>
+</html>

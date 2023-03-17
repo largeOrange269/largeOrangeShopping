@@ -1,0 +1,96 @@
+/* 设置全局样式 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #FFA500;
+}
+/*设置标题*/
+.header {
+    position: absolute;
+    top: 10px;
+    left: 30%;
+    font-size: 20px;
+    color: #FFA500;
+}
+
+/* 设置页面容器 */
+.container {
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 10px;
+}
+
+/* 设置标题样式 */
+h1, h2 {
+    font-family: 'Roboto', sans-serif;
+    text-align: center;
+    margin-bottom: 20px;
+    color: #444;
+}
+
+/* 设置商品列表样式 */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+}
+
+th {
+    background-color: #eee;
+}
+
+.product:nth-child(even) {
+    background-color: #f5f5f5;
+}
+
+/* 设置按钮样式 */
+button {
+    padding: 10px 20px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    transition: all 0.2s ease;
+}
+
+.view-btn {
+    background-color: #007bff;
+    margin-right: 10px;
+}
+
+.buy-btn {
+    background-color: #dc3545;
+    margin-right: 10px;
+}
+.btn-cart {
+    position: absolute;
+    right: 10px;
+    background-color: #FFA500;
+}
+.btn-amount{
+    position: absolute;
+    right: 200px;
+    background-color: #FFA500;
+}
+.btn-order{
+    position: absolute;
+    right: 350px;
+    background-color: blue;
+}
+h2 {
+    position: relative;
+}
+.name{
+    color: #007bff;
+}

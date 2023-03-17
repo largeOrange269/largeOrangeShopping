@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>充值</title>
+    <link rel="stylesheet" href="/css/amount.css">
+</head>
+<body>
+<div class="container" style="margin-top: 100px;">
+    <h1>账户充值</h1>
+    <label for="amount">充值金额：</label>
+    <input type="number" id="amount" placeholder="请输入充值金额" required><br><br>
+    <label for="payment-method">支付方式：</label>
+    <select id="payment-method">
+        <option value="alipay">支付宝</option>
+        <option value="wechat-pay">微信支付</option>
+        <option value="bank-transfer">银行转账</option>
+    </select>
+    <br>
+    <br>
+    <br>
+    <br>
+    <button id="submit" class="myBtn">充值</button>
+</div>
+</body>
+<!--充值按钮-->
+<script src="/js/jQuery.3.64.js"></script>
+<script>
+    //获取用户id
+    let id = JSON.parse(localStorage.getItem('id'))
+    console.log(id)
+    //触发充值事件
+    $("#submit").click(function () {
+        //获取充值余额
+        let balance = $("#amount").val();
+        console.log(balance)
+        if (balance){
+            //发送ajax请求
+            $.ajax({
+                url:"/user/amount",
+                method:"PUT",
+                data:{"balance":balance,"id":id},
+                success:function (json){
+                    if (json.code==200){
+                        alert("充值"+balance+"元成功")
+                        window.location.href="/web/index.html";
+                    }
+                }
+            })
+        }
+    })
+</script>
+</html>

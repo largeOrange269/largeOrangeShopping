@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>详情</title>
+  <link rel="stylesheet" href="/css/message.css">
+</head>
+
+<body style="background:#FFA500">
+<div class="container">
+  <span class="mySpan" >名称：</span>
+  <span class="spn" id="spanName"></span>
+  <p class="price">
+    <span class="mySpan">价格：</span>
+    <span class="spn" id="spanPrice"></span>
+  </p>
+  <p class="description">
+    <span class="mySpan">简介：</span>
+    <span class="spn" id="spanMessage"></span>
+  </p>
+  <p class="stock">
+    <span class="mySpan">库存：</span>
+    <span class="spn" id="spanStock"></span>
+  </p>
+  <button class="btn" onclick="back()">返回</button>
+</div>
+</body>
+<script src="/js/jQuery.3.64.js"></script>
+<script>
+  $(function () {
+    //接受数据并将数据转换为字符串
+    let productData = JSON.parse(localStorage.getItem('productData'));
+    console.log(productData.data.description)
+    //名称
+    $("#spanName").text(productData.data.name)
+    //价格
+    $("#spanPrice").text(productData.data.price)
+    //消息
+    $("#spanMessage").text(productData.data.description)
+    //库存
+    $("#spanStock").text(productData.data.stock)
+  })
+  //用户返回事件
+  function back(){
+    window.location.href="/web/index.html";
+  }
+</script>
+</html>
